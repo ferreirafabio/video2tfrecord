@@ -5,7 +5,7 @@ Implementation supports Optical Flow (currently OpenCV's calcOpticalFlowFarnebac
 This implementation was created during a research project and grew historically. Therefore, we invite everybody encountering bugs to pull-request a correction.
 
 ### Requirements
-- tensorflow 0.12.1 or higher
+- TensorFlow 0.12.1 or higher
 - OpenCV (cv2 for python 2.7) 
 - numpy
 

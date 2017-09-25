@@ -21,6 +21,7 @@ By adjusting the parameters at the top of the code you can control:
 - number of videos a tfrecords file should contain
 
 
+
 The videos are stored as features in the tfrecords. Every video instance contains the following data/information:
 - feature[path] (as byte string while path being "blobs/i" with 0 <= i <=number of images per video)
 - feature['height'] (while height being the image height, e.g. 128)

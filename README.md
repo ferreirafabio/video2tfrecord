@@ -28,4 +28,4 @@ The videos are stored as features in the tfrecords. Every video instance contain
 - feature['width'] (while width being the image width, e.g. 128)
 - feature['depth'] (while depth being the image depth, e.g. 4 if optical flow used)
 
-
+Contributors: Fábio Ferreira and Jonas Rothfuss (https://github.com/jonasrothfuss/)

@@ -1,6 +1,6 @@
 # video2tfrecords
 Easily convert RGB video data (e.g. .avi) to the TensorFlow tfrecords file format for training e.g. a NN in TensorFlow. Due to common hardware/GPU RAM limitations in Deep Learning, this implementation allows to limit the number of frames per video to be stored in the tfrecords. The code automatically chooses the frame step size s.t. there is an equal separation distribution of the individual video frames. 
-Implementation supports Optical Flow (currently OpenCV's calcOpticalFlowFarneback) as an additional 4th channel and can be easily adapted in this regard. 
+Implementation supports Optical Flow (currently OpenCV's calcOpticalFlowFarneback) as an additional 4th channel and can be easily adapted in this regard. Acompanying the code, I've also added a small example with two .mp4 files from which two tfrecords batches are created (1 video per tfrecords file).
 
 This implementation was created during a research project and grew historically. Therefore, we invite users encountering bugs to pull-request a correction.
 

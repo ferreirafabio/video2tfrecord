@@ -5,9 +5,24 @@ Implementation supports Optical Flow (currently OpenCV's calcOpticalFlowFarnebac
 This implementation was created during a research project and grew historically. Therefore, we invite users encountering bugs to pull-request a correction.
 
 ### Requirements
-- (successfully tested with) TensorFlow 0.12.1
-- OpenCV
-- numpy
+Successfully tested with:
+- Python 3.4 and 3.6
+- tensorflow 0.12.1
+- opencv-python 3.3.0.10
+- numpy 1.13.3
+
+### Installation
+## Python environment
+It is recommended to use pip and a virtual environment for a Python installation:
+1. Therefore, this repository includes a requirements.txt
+
+## OpenCV
+you esentially have two options for preparing the OpenCV installation:
+1. (recommended) install the statically built OpenCV binaries by using the pip wrapper package ('pip3 install opencv-python')
+2. build OpenCV locally from the repository (e.g. refer to [1])
+
+
+
 
 ### Parameters and storage details
 By adjusting the parameters at the top of the code you can control:
@@ -29,3 +44,5 @@ The videos are stored as features in the tfrecords. Every video instance contain
 - feature['depth'] (while depth being the image depth, e.g. 4 if optical flow used)
 
 Additional contributors: Jonas Rothfuss (https://github.com/jonasrothfuss/)
+
+[1] https://stackoverflow.com/questions/20953273/install-opencv-for-python-3-3

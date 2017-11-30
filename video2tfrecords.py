@@ -20,18 +20,18 @@ import tensorflow as tf
 
 
 FLAGS = None
-FILE_FILTER = '*.avi'
-NUM_FRAMES_PER_VIDEO = 15
+FILE_FILTER = '*.mp4'
+NUM_FRAMES_PER_VIDEO = 5
 NUM_CHANNELS_VIDEO = 4
-WIDTH_VIDEO = 128
-HEIGHT_VIDEO = 128
+WIDTH_VIDEO = 1280
+HEIGHT_VIDEO = 720
 
-SOURCE = '/insert/source/here'
-DESTINATION = '/insert/destination/here'
+SOURCE = './example/input'
+DESTINATION = './example/output'
 
 
 FLAGS = flags.FLAGS
-flags.DEFINE_integer('num_videos', 1000, 'Number of videos stored in one single tfrecords file')
+flags.DEFINE_integer('num_videos', 1, 'Number of videos stored in one single tfrecords file')
 flags.DEFINE_string('image_color_depth', np.uint8, 'Color depth for the images stored in the tfrecords files. '
                                                           'Has to correspond to the source video color depth. '
                                                    'Specified as np dtype (e.g. ''np.uint8).')
@@ -55,6 +55,7 @@ def get_chunks(l, n):
 
 
 def getVideoCapture(path):
+    assert os.path.isfile(path)
     cap = None
     if path:
       cap = cv2.VideoCapture(path)
@@ -76,8 +77,9 @@ def compute_dense_optical_flow(prev_image, current_image):
   assert current_image.shape == old_shape
   hsv = np.zeros_like(prev_image)
   hsv[..., 1] = 255
-
-  flow = cv2.calcOpticalFlowFarneback(prev_image_gray, current_image_gray, 0.8, 15, 5, 10, 5, 1.5, 0)
+  flow = None
+  flow = cv2.calcOpticalFlowFarneback(prev=prev_image_gray, next=current_image_gray, flow=flow, pyr_scale=0.8,
+                                      levels=15, winsize=5, iterations=10, poly_n=5, poly_sigma=0, flags=10)
 
   mag, ang = cv2.cartToPolar(flow[..., 0], flow[..., 1])
   hsv[..., 0] = ang*180/np.pi/2
@@ -114,7 +116,8 @@ def save_video_to_tfrecords(source_path, destination_path, videos_per_file=FLAGS
     data = convert_video_to_numpy(batch, dense_optical_flow=dense_optical_flow)
     total_batch_number = int(math.ceil(len(filenames)/videos_per_file))
     print('Batch ' + str(i+1) + '/' + str(total_batch_number))
-    save_numpy_to_tfrecords(data, destination_path, 'train_blobs_batch_', videos_per_file, i+1,
+    assert data.size != 0, 'something went wrong during video to numpy conversion'
+    save_numpy_to_tfrecords(data, destination_path, 'batch_', videos_per_file, i+1,
                             total_batch_number)
 
 
@@ -199,7 +202,11 @@ def convert_video_to_numpy(filenames, dense_optical_flow=False):
     assert cap is not None, "Couldn't load video capture:" + filename + ". Moving to next video."
 
     # compute meta data of video
-    frameCount = cap.get(cv2.cv.CV_CAP_PROP_FRAME_COUNT)
+    if hasattr(cv2, 'cv'):
+      frameCount = cap.get(cv2.cv.CAP_PROP_FRAME_COUNT)
+    else:
+      frameCount = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+    #frameCount = cap.get(cv2.cv.CV_CAP_PROP_FRAME_COUNT)
 
     # returns nan, if fps needed a measurement must be implemented
     # frameRate = cap.get(cv2.cv.CV_CAP_PROP_FPS)
@@ -242,7 +249,7 @@ def convert_video_to_numpy(filenames, dense_optical_flow=False):
               resizedImage = cv2.resize(frame[:, :], (HEIGHT_VIDEO, WIDTH_VIDEO))
             else:
               for k in range(num_real_image_channel):
-                resizedImage = cv2.resize(frame[:, :, k], (HEIGHT_VIDEO, WIDTH_VIDEO))
+                resizedImage = cv2.resize(frame[:, :, k], (WIDTH_VIDEO, HEIGHT_VIDEO))
                 image[:, :, k] = resizedImage
 
               if dense_optical_flow:

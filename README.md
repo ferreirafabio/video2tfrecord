@@ -10,19 +10,18 @@ Successfully tested with:
 - tensorflow 1.4.0
 - opencv-python 3.3.0.10
 - numpy 1.13.3 
+- virtualenv 15.1.0
 
 ## Installation
 ### Python environment
 It is recommended to use pip and a virtual environment for a Python installation. Therefore, differentia between the two use cases:
 1. you've a environment up & running: ensure it meets requirements.txt
-2. you don't have an environment set up: I've added two installation scripts (for mac and linux) that can be run with `./install_*.sh` from the console. Before running the installation, please ensure both a Python 3 version, pip and virtualenv is installed on your machine. If you have a running
+2. you don't have an environment set up: I've added two installation scripts (for mac and linux) that can be run with `./install_*.sh` from the console. Before running the installation, please ensure a Python 3 version, pip and virtualenv is installed on your machine.
 
 ### OpenCV
 you esentially have two options for preparing the OpenCV installation:
 1. (recommended) install the statically built OpenCV binaries by using the pip wrapper package ('pip3 install opencv-python')
-2. build OpenCV locally from the repository (e.g. refer to [1])
-
-
+2. build OpenCV locally from the repository [1] (e.g. refer to StackOverflow thread under [2])
 
 
 ## Parameters and storage details
@@ -46,4 +45,5 @@ The videos are stored as features in the tfrecords. Every video instance contain
 
 Additional contributors: Jonas Rothfuss (https://github.com/jonasrothfuss/)
 
-[1] https://stackoverflow.com/questions/20953273/install-opencv-for-python-3-3
+[1] https://github.com/opencv/opencv
+[2] https://stackoverflow.com/questions/20953273/install-opencv-for-python-3-3

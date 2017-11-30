@@ -25,7 +25,6 @@ you esentially have two options for preparing the OpenCV installation:
 
 
 
-
 ## Parameters and storage details
 By adjusting the parameters at the top of the code you can control:
 - input dir (containing all the video files)
@@ -47,6 +46,5 @@ The videos are stored as features in the tfrecords. Every video instance contain
 
 Additional contributors: Jonas Rothfuss (https://github.com/jonasrothfuss/)
 
-[1] https://github.com/opencv/opencv 
-
-[2] https://stackoverflow.com/questions/20953273/install-opencv-for-python-3-3
+- [1] https://github.com/opencv/opencv
+- [2] https://stackoverflow.com/questions/20953273/install-opencv-for-python-3-3

@@ -18,7 +18,6 @@ import cv2 as cv2
 import numpy as np
 import tensorflow as tf
 
-
 FLAGS = None
 FILE_FILTER = '*.mp4'
 NUM_FRAMES_PER_VIDEO = 5
@@ -29,19 +28,20 @@ HEIGHT_VIDEO = 720
 SOURCE = './example/input'
 DESTINATION = './example/output'
 
-
 FLAGS = flags.FLAGS
 flags.DEFINE_integer('num_videos', 1, 'Number of videos stored in one single tfrecords file')
 flags.DEFINE_string('image_color_depth', np.uint8, 'Color depth for the images stored in the tfrecords files. '
-                                                          'Has to correspond to the source video color depth. '
+                                                   'Has to correspond to the source video color depth. '
                                                    'Specified as np dtype (e.g. ''np.uint8).')
 flags.DEFINE_string('source', SOURCE, 'Directory with video files')
 flags.DEFINE_string('output_path', DESTINATION, 'Directory for storing tf records')
-flags.DEFINE_boolean('optical_flow', True, 'Indictes whether optical flow shall be computed and added as fourth '
-                                           'channel. Defaults to False')
+flags.DEFINE_boolean('optical_flow', True, 'Indicates whether optical flow shall be computed and added as fourth '
+                                           'channel.')
+
 
 def _int64_feature(value):
   return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
+
 
 def _bytes_feature(value):
   return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
@@ -55,11 +55,11 @@ def get_chunks(l, n):
 
 
 def getVideoCapture(path):
-    assert os.path.isfile(path)
-    cap = None
-    if path:
-      cap = cv2.VideoCapture(path)
-    return cap
+  assert os.path.isfile(path)
+  cap = None
+  if path:
+    cap = cv2.VideoCapture(path)
+  return cap
 
 
 def getNextFrame(cap):
@@ -82,10 +82,9 @@ def compute_dense_optical_flow(prev_image, current_image):
                                       levels=15, winsize=5, iterations=10, poly_n=5, poly_sigma=0, flags=10)
 
   mag, ang = cv2.cartToPolar(flow[..., 0], flow[..., 1])
-  hsv[..., 0] = ang*180/np.pi/2
+  hsv[..., 0] = ang * 180 / np.pi / 2
   hsv[..., 2] = cv2.normalize(mag, None, 0, 255, cv2.NORM_MINMAX)
   return cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
-
 
 
 def save_video_to_tfrecords(source_path, destination_path, videos_per_file=FLAGS.num_videos, video_filenames=None,
@@ -97,7 +96,8 @@ def save_video_to_tfrecords(source_path, destination_path, videos_per_file=FLAGS
   :param dense_optical_flow: boolean flag that controls if optical flow should be used and added to tfrecords
   """
   global NUM_CHANNELS_VIDEO
-  assert (NUM_CHANNELS_VIDEO == 3 and (not dense_optical_flow)) or (NUM_CHANNELS_VIDEO == 4 and dense_optical_flow), "correct NUM_CHANNELS_VIDEO"
+  assert (NUM_CHANNELS_VIDEO == 3 and (not dense_optical_flow)) or (
+    NUM_CHANNELS_VIDEO == 4 and dense_optical_flow), "correct NUM_CHANNELS_VIDEO"
 
   if video_filenames is not None:
     filenames = video_filenames
@@ -110,15 +110,12 @@ def save_video_to_tfrecords(source_path, destination_path, videos_per_file=FLAGS
 
   filenames_split = list(get_chunks(filenames, videos_per_file))
 
-
-
   for i, batch in enumerate(filenames_split):
     data = convert_video_to_numpy(batch, dense_optical_flow=dense_optical_flow)
-    total_batch_number = int(math.ceil(len(filenames)/videos_per_file))
-    print('Batch ' + str(i+1) + '/' + str(total_batch_number))
+    total_batch_number = int(math.ceil(len(filenames) / videos_per_file))
+    print('Batch ' + str(i + 1) + '/' + str(total_batch_number))
     assert data.size != 0, 'something went wrong during video to numpy conversion'
-    save_numpy_to_tfrecords(data, destination_path, 'batch_', videos_per_file, i+1,
-                            total_batch_number)
+    save_numpy_to_tfrecords(data, destination_path, 'batch_', videos_per_file, i + 1, total_batch_number)
 
 
 def save_numpy_to_tfrecords(data, destination_path, name, fragmentSize, current_batch_number, total_batch_number):
@@ -142,27 +139,27 @@ def save_numpy_to_tfrecords(data, destination_path, name, fragmentSize, current_
 
   for videoCount in range((num_videos)):
 
-      if videoCount % fragmentSize == 0:
-          if writer is not None:
-              writer.close()
-          filename = os.path.join(destination_path, name + str(current_batch_number) + '_of_' + str(total_batch_number) + '.tfrecords')
-          print('Writing', filename)
-          writer = tf.python_io.TFRecordWriter(filename)
+    if videoCount % fragmentSize == 0:
+      if writer is not None:
+        writer.close()
+      filename = os.path.join(destination_path,
+                              name + str(current_batch_number) + '_of_' + str(total_batch_number) + '.tfrecords')
+      print('Writing', filename)
+      writer = tf.python_io.TFRecordWriter(filename)
 
-      for imageCount in range(num_images):
-          path = 'blob' + '/' + str(imageCount)
-          image = data[videoCount, imageCount, :, :, :]
-          image = image.astype(FLAGS.image_color_depth)
-          image_raw = image.tostring()
+    for imageCount in range(num_images):
+      path = 'blob' + '/' + str(imageCount)
+      image = data[videoCount, imageCount, :, :, :]
+      image = image.astype(FLAGS.image_color_depth)
+      image_raw = image.tostring()
 
-          feature[path]= _bytes_feature(image_raw)
-          feature['height'] = _int64_feature(height)
-          feature['width'] = _int64_feature(width)
-          feature['depth'] = _int64_feature(num_channels)
+      feature[path] = _bytes_feature(image_raw)
+      feature['height'] = _int64_feature(height)
+      feature['width'] = _int64_feature(width)
+      feature['depth'] = _int64_feature(num_channels)
 
-
-      example = tf.train.Example(features=tf.train.Features(feature=feature))
-      writer.write(example.SerializeToString())
+    example = tf.train.Example(features=tf.train.Features(feature=feature))
+    writer.write(example.SerializeToString())
   if writer is not None:
     writer.close()
 
@@ -206,12 +203,12 @@ def convert_video_to_numpy(filenames, dense_optical_flow=False):
       frameCount = cap.get(cv2.cv.CAP_PROP_FRAME_COUNT)
     else:
       frameCount = cap.get(cv2.CAP_PROP_FRAME_COUNT)
-    #frameCount = cap.get(cv2.cv.CV_CAP_PROP_FRAME_COUNT)
+    # frameCount = cap.get(cv2.cv.CV_CAP_PROP_FRAME_COUNT)
 
     # returns nan, if fps needed a measurement must be implemented
     # frameRate = cap.get(cv2.cv.CV_CAP_PROP_FPS)
     steps = math.floor(frameCount / NUM_FRAMES_PER_VIDEO)
-    j = 0
+    frames_counter = 0
     prev_frame_none = False
 
     restart = True
@@ -221,18 +218,18 @@ def convert_video_to_numpy(filenames, dense_optical_flow=False):
       for f in range(int(frameCount)):
         # get next frame after 'steps' iterations:
         # floor used after modulo operation because rounding module before leads to
-        # unhandy partition of data (big gab in the end)
+        # unhandy partition of data (big gap in the end)
         if math.floor(f % steps) == 0:
           frame = getNextFrame(cap)
-          # special case handling: opencv's frame count != real frame count, reiterate over same video
-          if frame is None and j < NUM_FRAMES_PER_VIDEO:
-            if frame and prev_frame_none: break
-            prev_frame_none = True
+          # special case handling: opencv's frame count sometimes differs from real frame count, reiterate over same
+          # video
+          if frame is None and frames_counter < NUM_FRAMES_PER_VIDEO:
             # repeat with smaller step size
             steps -= 1
-            if steps == 0: break
+            if frame and prev_frame_none or steps <= 0: break
+            prev_frame_none = True
             print("reducing step size due to error")
-            j = 0
+            frames_counter = 0
             cap.release()
             cap = getVideoCapture(filenames[i])
             # wait for image retrieval to be ready
@@ -240,37 +237,32 @@ def convert_video_to_numpy(filenames, dense_optical_flow=False):
             video.fill(0)
             continue
           else:
-            if j >= NUM_FRAMES_PER_VIDEO:
+            if frames_counter >= NUM_FRAMES_PER_VIDEO:
               restart = False
               break
+
             # iterate over channels
-            if frame.ndim == 2:
-              # cv returns 2 dim array if gray
-              resizedImage = cv2.resize(frame[:, :], (HEIGHT_VIDEO, WIDTH_VIDEO))
-            else:
-              for k in range(num_real_image_channel):
-                resizedImage = cv2.resize(frame[:, :, k], (WIDTH_VIDEO, HEIGHT_VIDEO))
-                image[:, :, k] = resizedImage
+            for k in range(num_real_image_channel):
+              resizedImage = cv2.resize(frame[:, :, k], (WIDTH_VIDEO, HEIGHT_VIDEO))
+              image[:, :, k] = resizedImage
 
-              if dense_optical_flow:
-                # optical flow requires at least two images
-                if imagePrev is not None:
-                  frameFlow = np.zeros((HEIGHT_VIDEO, WIDTH_VIDEO))
-                  frameFlow = compute_dense_optical_flow(imagePrev, image)
-                  frameFlow = cv2.cvtColor(frameFlow, cv2.COLOR_BGR2GRAY)
-                else:
-                  frameFlow = np.zeros((HEIGHT_VIDEO, WIDTH_VIDEO))
+            if dense_optical_flow:
+              # optical flow requires at least two images, make the OF image appended to the first image just black
+              if imagePrev is not None:
+                frameFlow = compute_dense_optical_flow(imagePrev, image)
+                frameFlow = cv2.cvtColor(frameFlow, cv2.COLOR_BGR2GRAY)
+              else:
+                frameFlow = np.zeros((HEIGHT_VIDEO, WIDTH_VIDEO))
+              imagePrev = image.copy()
 
-                imagePrev = image.copy()
-
+            # assemble the video from the single images
             if dense_optical_flow:
               image_with_flow = image.copy()
               image_with_flow = np.concatenate((image_with_flow, np.expand_dims(frameFlow, axis=2)), axis=2)
-              video[j, :, :, :] = image_with_flow
+              video[frames_counter, :, :, :] = image_with_flow
             else:
-              video[j, :, :, :] = image
-            j += 1
-            # print('total frames: ' + str(j) + " frame in video: " + str(f))
+              video[frames_counter, :, :, :] = image
+            frames_counter += 1
         else:
           getNextFrame(cap)
 
@@ -287,14 +279,11 @@ def convert_video_to_numpy(filenames, dense_optical_flow=False):
     except Exception as e:
       print(e)
 
-
   return np.array(data)
-
 
 
 def main(argv):
   save_video_to_tfrecords(FLAGS.source, FLAGS.output_path, FLAGS.num_videos, dense_optical_flow=FLAGS.optical_flow)
-
 
 
 if __name__ == '__main__':

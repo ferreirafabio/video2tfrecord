@@ -7,14 +7,15 @@ This implementation was created during a research project and grew historically.
 ## Requirements
 Successfully tested with:
 - Python 3.4 and 3.6
-- tensorflow 0.12.1
+- tensorflow 1.4.0
 - opencv-python 3.3.0.10
-- numpy 1.13.3
+- numpy 1.13.3 
 
 ## Installation
 ### Python environment
-It is recommended to use pip and a virtual environment for a Python installation:
-1. Therefore, this repository includes a requirements.txt
+It is recommended to use pip and a virtual environment for a Python installation. Therefore, differentia between the two use cases:
+1. you've a environment up & running: ensure it meets requirements.txt
+2. you don't have an environment set up: I've added two installation scripts (for mac and linux) that can be run with `./install_*.sh` from the console. Before running the installation, please ensure both a Python 3 version, pip and virtualenv is installed on your machine. If you have a running
 
 ### OpenCV
 you esentially have two options for preparing the OpenCV installation:

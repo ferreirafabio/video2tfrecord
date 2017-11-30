@@ -4,19 +4,19 @@ Implementation supports Optical Flow (currently OpenCV's calcOpticalFlowFarnebac
 
 This implementation was created during a research project and grew historically. Therefore, we invite users encountering bugs to pull-request a correction.
 
-### Requirements
+## Requirements
 Successfully tested with:
 - Python 3.4 and 3.6
 - tensorflow 0.12.1
 - opencv-python 3.3.0.10
 - numpy 1.13.3
 
-### Installation
-## Python environment
+## Installation
+### Python environment
 It is recommended to use pip and a virtual environment for a Python installation:
 1. Therefore, this repository includes a requirements.txt
 
-## OpenCV
+### OpenCV
 you esentially have two options for preparing the OpenCV installation:
 1. (recommended) install the statically built OpenCV binaries by using the pip wrapper package ('pip3 install opencv-python')
 2. build OpenCV locally from the repository (e.g. refer to [1])
@@ -24,7 +24,7 @@ you esentially have two options for preparing the OpenCV installation:
 
 
 
-### Parameters and storage details
+## Parameters and storage details
 By adjusting the parameters at the top of the code you can control:
 - input dir (containing all the video files)
 - output dir (to which the tfrecords should be saved)

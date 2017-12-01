@@ -16,7 +16,7 @@ Successfully tested with:
 ## Installation
 #### Python environment
 It is recommended to use pip and a virtual environment for a Python installation. Therefore, differentia between the two use cases:
-1. you have an environment up & running: ensure it meets the pip requirements specified by `requirements.txt´
+1. you have an environment up & running: ensure it meets the pip requirements specified by `requirements.txt`
 2. you don't have an environment set up: I've added two installation scripts (for mac and linux) that can be run with `./install_*.sh` from the console. Before running the installation, please ensure a Python 3 version, pip and virtualenv is installed on your machine.
 
 #### OpenCV

@@ -21,7 +21,7 @@ It is recommended to use pip and a virtual environment for a Python installation
 
 #### OpenCV
 you esentially have two options for preparing the OpenCV installation:
-1. (recommended) install the statically built OpenCV binaries by using the pip wrapper package ('pip3 install opencv-python')
+1. (recommended) install the statically built OpenCV binaries by using the pip wrapper package with the command `pip3 install opencv-python`
 2. build OpenCV locally from the repository [1] (e.g. refer to StackOverflow thread under [2])
 
 

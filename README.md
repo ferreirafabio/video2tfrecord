@@ -7,7 +7,6 @@ This implementation was created during a research project and grew historically.
 
 
 ## Installation
-### Install with pip
 run the following command on your terminal:
 ```
 pip install video2tfrecord 

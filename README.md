@@ -5,12 +5,6 @@ The implementation offers the option to include Optical Flow (currently OpenCV's
 
 This implementation was created during a research project and grew historically. Therefore, we invite users encountering bugs to pull-request a correction.
 
-## Requirements
-Successfully tested with:
-- Python 3.4 and 3.6
-- tensorflow 1.4.0
-- opencv-python 3.3.0.10
-- numpy 1.13.3 
 
 ## Installation
 ### Install with pip
@@ -20,6 +14,12 @@ pip install video2tfrecord
 ``` 
 
 If you want to set up your installation manually, use the install scripts provided. 
+
+The package has been successfully tested with:
+- Python 3.4 and 3.6
+- tensorflow 1.4.0
+- opencv-python 3.3.0.10
+- numpy 1.13.3 
 
 ### OpenCV troubleshooting
 Typically, the required OpenCV dependency will be installed during the pip installation and everything should work fine. However, if you encounter issues with OpenCV (e.g. because you use a different version), you can build OpenCV locally from the repository [1] (e.g. refer to StackOverflow thread under [2]). Make sure to use the specified version as in different versions there might be missing functions.

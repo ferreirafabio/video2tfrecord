@@ -14,7 +14,10 @@ Successfully tested with:
 
 ## Installation
 ### Install with pip
-run ``` pip install video2tfrecord ``` on your terminal (if you want to set up your installation manually, use the install scripts provided). 
+run the following command on your terminal:
+> ````pip install video2tfrecord ```` 
+
+If you want to set up your installation manually, use the install scripts provided. 
 
 ### OpenCV dependency
 Typically, the required OpenCV dependency will be installed during the pip installation and everything should work fine. However, if you encounter issues with OpenCV (e.g. because you use a different version), you can build OpenCV locally from the repository [1] (e.g. refer to StackOverflow thread under [2]). Make sure to use the specified version.

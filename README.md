@@ -15,7 +15,9 @@ Successfully tested with:
 ## Installation
 ### Install with pip
 run the following command on your terminal:
-> ````pip install video2tfrecord ```` 
+```
+pip install video2tfrecord 
+``` 
 
 If you want to set up your installation manually, use the install scripts provided. 
 

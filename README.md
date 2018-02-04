@@ -11,22 +11,13 @@ Successfully tested with:
 - tensorflow 1.4.0
 - opencv-python 3.3.0.10
 - numpy 1.13.3 
-- virtualenv 15.1.0
 
 ## Installation
 ### Install with pip
-`pip install video2tfrecord´
+run ``` pip install video2tfrecord ``` on your terminal (if you want to set up your installation manually, use the install scripts provided). 
 
-#### Python environment
-It is recommended to use pip and a virtual environment for a Python installation. Therefore, differentiate between the two use cases:
-1. you have an environment up & running: ensure it meets the pip requirements specified by `requirements.txt`
-2. you don't have an environment set up: I've added two installation scripts (for mac and linux) that can be run with `./install_*.sh` from the console. Before running the installation, please ensure a Python 3 version, pip and virtualenv is installed on your machine.
-
-#### OpenCV
-you esentially have two options for preparing the OpenCV installation:
-1. (recommended) install the statically built OpenCV binaries by using the pip wrapper package with the command `pip3 install opencv-python`
-2. build OpenCV locally from the repository [1] (e.g. refer to StackOverflow thread under [2])
-
+### OpenCV dependency
+Typically, the required OpenCV dependency will be installed during the pip installation and everything should work fine. However, if you encounter issues with OpenCV (e.g. because you use a different version), you can build OpenCV locally from the repository [1] (e.g. refer to StackOverflow thread under [2]). Make sure to use the specified version.
 
 
 ## Parameters and storage details

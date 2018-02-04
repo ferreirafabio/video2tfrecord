@@ -14,6 +14,9 @@ Successfully tested with:
 - virtualenv 15.1.0
 
 ## Installation
+### Install with pip
+`pip install video2tfrecord´
+
 #### Python environment
 It is recommended to use pip and a virtual environment for a Python installation. Therefore, differentiate between the two use cases:
 1. you have an environment up & running: ensure it meets the pip requirements specified by `requirements.txt`

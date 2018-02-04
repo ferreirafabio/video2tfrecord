@@ -6,10 +6,6 @@
  (currently OpenCV's calcOpticalFlowFarneback) as an additional 4th channel.
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import os, math
 from tensorflow.python.platform import gfile
 from tensorflow.python.platform import flags
@@ -17,26 +13,30 @@ from tensorflow.python.platform import app
 import cv2 as cv2
 import numpy as np
 import tensorflow as tf
+import time
 
 FLAGS = None
 FILE_FILTER = '*.mp4'
-NUM_FRAMES_PER_VIDEO = 5
-NUM_CHANNELS_VIDEO = 4
-WIDTH_VIDEO = 1280
-HEIGHT_VIDEO = 720
 
-SOURCE = './example/input'
-DESTINATION = './example/output'
 
 FLAGS = flags.FLAGS
-flags.DEFINE_integer('num_videos', 1, 'Number of videos stored in one single tfrecords file')
-flags.DEFINE_string('image_color_depth', np.uint8, 'Color depth for the images stored in the tfrecords files. '
+flags.DEFINE_integer('n_videos_in_record', 10, 'Number of videos stored in one single tfrecord file')
+flags.DEFINE_string('image_color_depth', "uint8", 'Color depth as string for the images stored in the tfrecord files. '
                                                    'Has to correspond to the source video color depth. '
-                                                   'Specified as np dtype (e.g. ''np.uint8).')
-flags.DEFINE_string('source', SOURCE, 'Directory with video files')
-flags.DEFINE_string('output_path', DESTINATION, 'Directory for storing tf records')
+                                                   'Specified as dtype (e.g. uint8 or uint16)')
+flags.DEFINE_string('file_suffix', "*.mp4", 'defines the video file type, e.g. .mp4')
+
+
+flags.DEFINE_string('source', './example/input', 'Directory with video files')
+flags.DEFINE_string('destination', './example/output', 'Directory for storing tf records')
 flags.DEFINE_boolean('optical_flow', True, 'Indicates whether optical flow shall be computed and added as fourth '
                                            'channel.')
+flags.DEFINE_integer('width_video', 1280, 'the width of the videos in pixels')
+flags.DEFINE_integer('height_video', 720, 'the height of the videos in pixels')
+flags.DEFINE_integer('n_frames_per_video', 5, 'specifies the number of frames to be taken from each video')
+flags.DEFINE_integer('n_channels', 4, 'specifies the number of channels the videos have')
+flags.DEFINE_string('video_filenames', None, 'specifies the video file names as a list in the case the video paths shall not be determined by the '
+                                             'script')
 
 
 def _int64_feature(value):
@@ -87,38 +87,49 @@ def compute_dense_optical_flow(prev_image, current_image):
   return cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
 
 
-def save_video_to_tfrecords(source_path, destination_path, videos_per_file=FLAGS.num_videos, video_filenames=None,
-                            dense_optical_flow=False):
+def convert_videos_to_tfrecord(source_path, destination_path, n_videos_in_record=10, n_frames_per_video=5, file_suffix="*.mp4",
+                               dense_optical_flow=True, n_channels=4, width=1280, height=720, color_depth="uint8", video_filenames=None):
   """calls sub-functions convert_video_to_numpy and save_numpy_to_tfrecords in order to directly export tfrecords files
   :param source_path: directory where video videos are stored
   :param destination_path: directory where tfrecords should be stored
-  :param videos_per_file: specifies the number of videos within one tfrecords file
+  :param n_videos_in_record: Number of videos stored in one single tfrecord file
+  :param n_frames_per_video: specifies the number of frames to be taken from each video
+  :param file_suffix: defines the video file type, e.g. *.mp4
   :param dense_optical_flow: boolean flag that controls if optical flow should be used and added to tfrecords
+  :param n_channels: specifies the number of channels the videos have
+  :param width: the width of the videos in pixels
+  :param height: the height of the videos in pixels
+  :param color_depth: Color depth as string for the images stored in the tfrecord files. Has to correspond to the source video color depth. '
+                                                   'Specified as dtype (e.g. uint8 or uint16)
+  :param video_filenames: specify, if the the full paths to the videos can be directly be provided. In this case, the source will be ignored.
   """
-  global NUM_CHANNELS_VIDEO
-  assert (NUM_CHANNELS_VIDEO == 3 and (not dense_optical_flow)) or (
-    NUM_CHANNELS_VIDEO == 4 and dense_optical_flow), "correct NUM_CHANNELS_VIDEO"
+  assert (n_channels == 3 and (not dense_optical_flow)) or (n_channels == 4 and dense_optical_flow), "either 3 channels and no optical flow or 4 " \
+                                                                                                     "channels and optical flow currently supported"
 
   if video_filenames is not None:
     filenames = video_filenames
   else:
-    filenames = gfile.Glob(os.path.join(source_path, FILE_FILTER))
+    filenames = gfile.Glob(os.path.join(source_path, file_suffix))
   if not filenames:
     raise RuntimeError('No data files found.')
 
   print('Total videos found: ' + str(len(filenames)))
 
-  filenames_split = list(get_chunks(filenames, videos_per_file))
+  filenames_split = list(get_chunks(filenames, n_videos_in_record))
 
   for i, batch in enumerate(filenames_split):
-    data = convert_video_to_numpy(batch, dense_optical_flow=dense_optical_flow)
-    total_batch_number = int(math.ceil(len(filenames) / videos_per_file))
-    print('Batch ' + str(i + 1) + '/' + str(total_batch_number))
+    data = convert_video_to_numpy(filenames=batch, width=width, height=height, n_frames_per_video=n_frames_per_video, n_channels=n_channels,
+                                  dense_optical_flow=dense_optical_flow)
+    if n_videos_in_record > len(filenames):
+      total_batch_number = 1
+    else:
+      total_batch_number = int(math.ceil(len(filenames) / n_videos_in_record))
+    print('Batch ' + str(i + 1) + '/' + str(total_batch_number) + " completed")
     assert data.size != 0, 'something went wrong during video to numpy conversion'
-    save_numpy_to_tfrecords(data, destination_path, 'batch_', videos_per_file, i + 1, total_batch_number)
+    save_numpy_to_tfrecords(data, destination_path, 'batch_', n_videos_in_record, i + 1, total_batch_number, color_depth=color_depth)
 
 
-def save_numpy_to_tfrecords(data, destination_path, name, fragmentSize, current_batch_number, total_batch_number):
+def save_numpy_to_tfrecords(data, destination_path, name, fragmentSize, current_batch_number, total_batch_number, color_depth):
   """Converts an entire dataset into x tfrecords where x=videos/fragmentSize.
   :param data: ndarray(uint32) of shape (v,i,h,w,c) with v=number of videos, i=number of images, c=number of image
   channels, h=image height, w=image width
@@ -150,7 +161,7 @@ def save_numpy_to_tfrecords(data, destination_path, name, fragmentSize, current_
     for imageCount in range(num_images):
       path = 'blob' + '/' + str(imageCount)
       image = data[videoCount, imageCount, :, :, :]
-      image = image.astype(FLAGS.image_color_depth)
+      image = image.astype(color_depth)
       image_raw = image.tostring()
 
       feature[path] = _bytes_feature(image_raw)
@@ -164,7 +175,7 @@ def save_numpy_to_tfrecords(data, destination_path, name, fragmentSize, current_
     writer.close()
 
 
-def convert_video_to_numpy(filenames, dense_optical_flow=False):
+def convert_video_to_numpy(filenames, width, height, n_frames_per_video, n_channels, dense_optical_flow=False):
   """Generates an ndarray from multiple video files given by filenames.
   Implementation chooses frame step size automatically for a equal separation distribution of the video images.
 
@@ -173,7 +184,6 @@ def convert_video_to_numpy(filenames, dense_optical_flow=False):
   :return if no optical flow is used: ndarray(uint32) of shape (v,i,h,w,c) with v=number of videos, i=number of images,
   (h,w)=height and width of image, c=channel, if optical flow is used: ndarray(uint32) of (v,i,h,w,
   c+1)"""
-  global NUM_CHANNELS_VIDEO
   if not filenames:
     raise RuntimeError('No data files found.')
 
@@ -181,18 +191,17 @@ def convert_video_to_numpy(filenames, dense_optical_flow=False):
 
   if dense_optical_flow:
     # need an additional channel for the optical flow with one exception:
-    global NUM_CHANNELS_VIDEO
-    NUM_CHANNELS_VIDEO = 4
+    n_channels = 4
     num_real_image_channel = 3
   else:
     # if no optical flow, make everything normal:
-    num_real_image_channel = NUM_CHANNELS_VIDEO
+    num_real_image_channel = n_channels
 
   data = []
 
   def video_file_to_ndarray(i, filename):
-    image = np.zeros((HEIGHT_VIDEO, WIDTH_VIDEO, num_real_image_channel), dtype=FLAGS.image_color_depth)
-    video = np.zeros((NUM_FRAMES_PER_VIDEO, HEIGHT_VIDEO, WIDTH_VIDEO, NUM_CHANNELS_VIDEO), dtype=np.uint32)
+    image = np.zeros((height, width, num_real_image_channel), dtype=FLAGS.image_color_depth)
+    video = np.zeros((n_frames_per_video, height, width, n_channels), dtype=np.uint32)
     imagePrev = None
     assert os.path.isfile(filename), "Couldn't find video file"
     cap = getVideoCapture(filename)
@@ -203,11 +212,10 @@ def convert_video_to_numpy(filenames, dense_optical_flow=False):
       frameCount = cap.get(cv2.cv.CAP_PROP_FRAME_COUNT)
     else:
       frameCount = cap.get(cv2.CAP_PROP_FRAME_COUNT)
-    # frameCount = cap.get(cv2.cv.CV_CAP_PROP_FRAME_COUNT)
 
     # returns nan, if fps needed a measurement must be implemented
     # frameRate = cap.get(cv2.cv.CV_CAP_PROP_FPS)
-    steps = math.floor(frameCount / NUM_FRAMES_PER_VIDEO)
+    steps = math.floor(frameCount / n_frames_per_video)
     frames_counter = 0
     prev_frame_none = False
 
@@ -223,27 +231,27 @@ def convert_video_to_numpy(filenames, dense_optical_flow=False):
           frame = getNextFrame(cap)
           # special case handling: opencv's frame count sometimes differs from real frame count, reiterate over same
           # video
-          if frame is None and frames_counter < NUM_FRAMES_PER_VIDEO:
+          if frame is None and frames_counter < n_frames_per_video:
             # repeat with smaller step size
             steps -= 1
             if frame and prev_frame_none or steps <= 0: break
             prev_frame_none = True
-            print("reducing step size due to error")
+            print("reducing step size due to error for video: ", filename)
             frames_counter = 0
             cap.release()
             cap = getVideoCapture(filenames[i])
             # wait for image retrieval to be ready
-            cv2.waitKey(3000)
+            time.sleep(2)
             video.fill(0)
             continue
           else:
-            if frames_counter >= NUM_FRAMES_PER_VIDEO:
+            if frames_counter >= n_frames_per_video:
               restart = False
               break
 
             # iterate over channels
             for k in range(num_real_image_channel):
-              resizedImage = cv2.resize(frame[:, :, k], (WIDTH_VIDEO, HEIGHT_VIDEO))
+              resizedImage = cv2.resize(frame[:, :, k], (width, height))
               image[:, :, k] = resizedImage
 
             if dense_optical_flow:
@@ -252,7 +260,7 @@ def convert_video_to_numpy(filenames, dense_optical_flow=False):
                 frameFlow = compute_dense_optical_flow(imagePrev, image)
                 frameFlow = cv2.cvtColor(frameFlow, cv2.COLOR_BGR2GRAY)
               else:
-                frameFlow = np.zeros((HEIGHT_VIDEO, WIDTH_VIDEO))
+                frameFlow = np.zeros((height, width))
               imagePrev = image.copy()
 
             # assemble the video from the single images
@@ -266,7 +274,7 @@ def convert_video_to_numpy(filenames, dense_optical_flow=False):
         else:
           getNextFrame(cap)
 
-    print(str(i + 1) + " of " + str(number_of_videos) + " videos processed", filenames[i])
+    print(str(i + 1) + " of " + str(number_of_videos) + " videos within batch processed: ", filenames[i])
 
     v = video.copy()
     cap.release()
@@ -282,8 +290,12 @@ def convert_video_to_numpy(filenames, dense_optical_flow=False):
   return np.array(data)
 
 
+
+
 def main(argv):
-  save_video_to_tfrecords(FLAGS.source, FLAGS.output_path, FLAGS.num_videos, dense_optical_flow=FLAGS.optical_flow)
+  convert_videos_to_tfrecord(FLAGS.source, FLAGS.destination, FLAGS.n_videos_in_record, FLAGS.n_frames_per_video, FLAGS.file_suffix,
+                             FLAGS.optical_flow, FLAGS.n_channels, FLAGS.width_video, FLAGS.height_video, FLAGS.image_color_depth,
+                             FLAGS.video_filenames)
 
 
 if __name__ == '__main__':

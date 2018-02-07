@@ -6,7 +6,7 @@ The implementation offers the option to include Optical Flow (currently OpenCV's
 This implementation was created during a research project and grew historically. Therefore, we invite users encountering bugs to pull-request fixes.
 
 
-## Installation and start
+# Installation and start
 run the following command on your terminal:
 ```
 pip install video2tfrecord 
@@ -28,11 +28,11 @@ The package has been successfully tested with:
 - opencv-python 3.3.0.10
 - numpy 1.13.3 
 
-### OpenCV troubleshooting
+## OpenCV troubleshooting
 Typically, the required OpenCV dependency will be installed during the pip installation and everything should work fine. However, if you encounter issues with OpenCV (e.g. because you use a different version), you can build OpenCV locally from the repository [1] (e.g. refer to StackOverflow thread under [2]). Make sure to use the specified version as in different versions there might be missing functions.
 
 
-## Parameters and storage details
+# Parameters and storage details
 By adjusting the parameters at the top of the code you can control:
 - input dir (containing all the video files)
 - output dir (to which the tfrecords should be saved)
@@ -50,7 +50,7 @@ The videos are stored as features in the tfrecords. Every video instance contain
 - feature['width'] (while width being the image width, e.g. 128)
 - feature['depth'] (while depth being the image depth, e.g. 4 if optical flow used)
 
-## To-do:
+# Future work:
 - improve documentation
 - write small exemplary script for loading the tfrecords + meta-data into a TF QueueRunner
 - replace Farneback optical flow with a more sophisticated method, say dense trajectories

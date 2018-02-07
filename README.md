@@ -6,11 +6,17 @@ The implementation offers the option to include Optical Flow (currently OpenCV's
 This implementation was created during a research project and grew historically. Therefore, we invite users encountering bugs to pull-request fixes.
 
 
-## Installation
+## Installation & Start
 run the following command on your terminal:
 ```
 pip install video2tfrecord 
 ``` 
+
+afterwards you can run:
+```
+convert_videos_to_tfrecord(source_dir, destination_dir, n_videos, n_frames, "*.avi")
+```                             
+while _n_videos_ being the number of videos in one single tfrecord file and _n_frames_ being the number of frames to be stored per video.                        
 
 If you want to set up your installation manually, use the install scripts provided. 
 

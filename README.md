@@ -20,7 +20,8 @@ convert_videos_to_tfrecord(source_dir, destination_dir, n_videos, n_frames, "*.a
 
 while `n_videos` being the number of videos in one single tfrecord file, `n_frames` being the number of frames to be stored per video and `source_dir` containing your .avi video files.
  
-If you want to set up your installation manually, use the install scripts provided. 
+## Manual installation 
+If you want to set up your installation manually, use the install scripts provided in the repository. 
 
 The package has been successfully tested with:
 - Python 3.4 and 3.6

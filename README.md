@@ -1,4 +1,4 @@
-# video2tfrecords
+# Description
 Easily convert RGB video data (e.g. tested with .avi and .mp4) to the TensorFlow tfrecords file format for training e.g. a NN in TensorFlow. Due to common hardware/GPU RAM limitations in Deep Learning, this implementation allows to limit the number of frames per video to be stored in the tfrecords. The code automatically chooses the frame step size s.t. there is an equal separation distribution of the individual video frames. 
 
 The implementation offers the option to include Optical Flow (currently OpenCV's calcOpticalFlowFarneback) as an additional channel to the tfrecords data. Furthermore, it can be easily extended in this regard, for example, by exchanging the currently used Optical Flow algorithm with a different one. Acompanying the code, I've also added a small example with two .mp4 files from which two tfrecords batches are created (1 video per tfrecords file). Please make sure to use the GitHub repo instead of the pip installation to access the examples.
@@ -6,7 +6,7 @@ The implementation offers the option to include Optical Flow (currently OpenCV's
 This implementation was created during a research project and grew historically. Therefore, we invite users encountering bugs to pull-request fixes.
 
 
-## Installation and Start
+## Installation and start
 run the following command on your terminal:
 ```
 pip install video2tfrecord 
@@ -37,7 +37,7 @@ By adjusting the parameters at the top of the code you can control:
 - input dir (containing all the video files)
 - output dir (to which the tfrecords should be saved)
 - resolution of the images
-- video file suffix (e.g. *.avi) as RegEx
+- video file suffix (e.g. *.avi) as RegEx(!include asterisk!)
 - number of frames per video that are actually stored in the tfrecord entries (can be smaller than the real number of frames)
 - image color depth
 - if optical flow should be added as a 4th channel
@@ -49,6 +49,11 @@ The videos are stored as features in the tfrecords. Every video instance contain
 - feature['height'] (while height being the image height, e.g. 128)
 - feature['width'] (while width being the image width, e.g. 128)
 - feature['depth'] (while depth being the image depth, e.g. 4 if optical flow used)
+
+## To-do:
+- improve documentation
+- write small exemplary script for loading the tfrecords + meta-data into a TF QueueRunner
+- replace Farneback optical flow with a more sophisticated method, say dense trajectories
 
 Additional contributors: Jonas Rothfuss (https://github.com/jonasrothfuss/)
 

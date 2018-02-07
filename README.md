@@ -6,17 +6,19 @@ The implementation offers the option to include Optical Flow (currently OpenCV's
 This implementation was created during a research project and grew historically. Therefore, we invite users encountering bugs to pull-request fixes.
 
 
-## Installation & Start
+## Installation and Start
 run the following command on your terminal:
 ```
 pip install video2tfrecord 
-``` 
-
-afterwards you can run:
 ```
-convert_videos_to_tfrecord(source_dir, destination_dir, n_videos, n_frames, "*.avi")
-```                             
-while _n_videos_ being the number of videos in one single tfrecord file and _n_frames_ being the number of frames to be stored per video.                        
+
+afterwards you can execute the following command to start the video to tfrecord conversion:
+
+```
+convert_videos_to_tfrecord(source_dir, destination_dir, n_videos, n_frames, "*.avi") 
+```
+
+while n_videos being the number of videos in one single tfrecord file and n_frames being the number of frames to be stored per video.
 
 If you want to set up your installation manually, use the install scripts provided. 
 
@@ -40,7 +42,6 @@ By adjusting the parameters at the top of the code you can control:
 - image color depth
 - if optical flow should be added as a 4th channel
 - number of videos a tfrecords file should contain
-
 
 
 The videos are stored as features in the tfrecords. Every video instance contains the following data/information:

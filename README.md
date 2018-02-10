@@ -30,7 +30,7 @@ The package has been successfully tested with:
 - numpy 1.13.3 
 
 ## OpenCV troubleshooting
-Typically, the required OpenCV dependency will be installed during the pip installation and everything should work fine. However, if you encounter issues with OpenCV (e.g. because you use a different version), you can build OpenCV locally from the repository [1] (e.g. refer to StackOverflow thread under [2]). Make sure to use the specified version as in different versions there might be missing functions.
+Typically, the required OpenCV dependency will be installed during the pip installation and everything should work fine. However, if you encounter issues with OpenCV (e.g. because you use a different version), you can build OpenCV locally from the repository [1] (e.g. refer to StackOverflow thread under [2]). Make sure to use the specified version as in different versions there might be changes to functions within the OpenCV framework.
 
 
 # Parameters and storage details

@@ -80,7 +80,7 @@ sklearn-extras==0.1.1
 sklearn-pandas==1.6.0
 static3==0.7.0
 statsmodels==0.8.0
-tensorflow==1.4.0
+tensorflow==1.5.0
 tensorflow-tensorboard==0.4.0rc3
 terminado==0.6
 testpath==0.3.1

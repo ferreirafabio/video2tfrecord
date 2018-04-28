@@ -122,7 +122,7 @@ def convert_videos_to_tfrecord(source_path, destination_path,
     """
     assert (n_channels == 3 and (not dense_optical_flow)) or (
         n_channels == 4 and dense_optical_flow), "either 3 channels and no optical flow" \
-                                                 "or 4 channels and optical flow currently supported"
+                                                 " or 4 channels and optical flow currently supported"
 
     if video_filenames is not None:
         filenames = video_filenames

@@ -14,14 +14,20 @@ run the following command on your terminal:
 pip install video2tfrecord 
 ```
 
-afterwards you can execute the following exemplary command to start the video-to-tfrecord conversion:
+# Converting video to tfrecord
+After installing the package, you can execute the following exemplary command to start the video-to-tfrecord conversion:
 
 ```
 convert_videos_to_tfrecord(source_path, destination_path, n_videos_in_record, n_frames_per_video, "*.avi") 
 ```
 
 while `n_videos` being the number of videos in one single tfrecord file, `n_frames` being the number of frames to be stored per video and `source_dir` containing your .avi video files.
- 
+
+# Reading from the tfrecord
+see ```test.py``` for an example
+
+
+
 ## Manual installation 
 If you want to set up your installation manually, use the install scripts provided in the repository. 
 

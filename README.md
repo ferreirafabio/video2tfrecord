@@ -33,9 +33,9 @@ see ```test.py``` for an example
 If you want to set up your installation manually, use the install scripts provided in the repository. 
 
 The package has been successfully tested with:
-- Python 3.4 and 3.6
+- Python 3.4, 3.5 and 3.6
 - tensorflow 1.5.0
-- opencv-python 3.3.0.10
+- opencv-python 3.4.0.12
 - numpy 1.14.0
 
 ## OpenCV troubleshooting

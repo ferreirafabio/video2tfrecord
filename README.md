@@ -1,4 +1,5 @@
 [![Downloads](http://pepy.tech/badge/video2tfrecord)](http://pepy.tech/count/video2tfrecord)
+[![Build Status](https://travis-ci.org/ferreirafabio/video2tfrecord.svg?branch=master)](https://travis-ci.org/ferreirafabio/video2tfrecord)
 
 # Description
 Easily convert RGB video data (e.g. tested with .avi and .mp4) to the TensorFlow tfrecords file format for training e.g. a NN in TensorFlow. Due to common hardware/GPU RAM limitations in Deep Learning, this implementation allows to limit the number of frames per video to be stored in the tfrecords. The code automatically chooses the frame step size s.t. there is an equal separation distribution of the individual video frames. 
@@ -14,22 +15,28 @@ run the following command on your terminal:
 pip install video2tfrecord 
 ```
 
-afterwards you can execute the following exemplary command to start the video-to-tfrecord conversion:
+# Converting video to tfrecord
+After installing the package, you can execute the following exemplary command to start the video-to-tfrecord conversion:
 
 ```
 convert_videos_to_tfrecord(source_path, destination_path, n_videos_in_record, n_frames_per_video, "*.avi") 
 ```
 
 while `n_videos` being the number of videos in one single tfrecord file, `n_frames` being the number of frames to be stored per video and `source_dir` containing your .avi video files.
- 
+
+# Reading from the tfrecord
+see ```test.py``` for an example
+
+
+
 ## Manual installation 
 If you want to set up your installation manually, use the install scripts provided in the repository. 
 
 The package has been successfully tested with:
 - Python 3.4 and 3.6
-- tensorflow 1.4.0
+- tensorflow 1.5.0
 - opencv-python 3.3.0.10
-- numpy 1.13.3 
+- numpy 1.14.0
 
 ## OpenCV troubleshooting
 Typically, the required OpenCV dependency will be installed during the pip installation and everything should work fine. However, if you encounter issues with OpenCV (e.g. because you use a different version), you can build OpenCV locally from the repository [1] (e.g. refer to StackOverflow thread under [2]). Make sure to use the specified version as in different versions there might be changes to functions within the OpenCV framework.
@@ -55,7 +62,7 @@ The videos are stored as features in the tfrecords. Every video instance contain
 
 # Future work:
 - improve documentation
-- write small exemplary script for loading the tfrecords + meta-data into a TF QueueRunner
+- ~~write small exemplary script for loading the tfrecords + meta-data into a TF QueueRunner~~ (see ```test.py```)
 - replace Farneback optical flow with a more sophisticated method, say dense trajectories
 
 Additional contributors: Jonas Rothfuss (https://github.com/jonasrothfuss/)

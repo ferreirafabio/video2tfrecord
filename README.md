@@ -9,13 +9,13 @@ The implementation offers the option to include Optical Flow (currently OpenCV's
 This implementation was created during a research project and grew historically. Therefore, we invite users encountering bugs to pull-request fixes.
 
 
-# Installation and start
-run the following command on your terminal:
+# Installation
+run the following command:
 ```
 pip install video2tfrecord 
 ```
 
-# Converting video to tfrecord
+# Writing (video) to tfrecord
 After installing the package, you can execute the following exemplary command to start the video-to-tfrecord conversion:
 
 ```
@@ -24,9 +24,8 @@ convert_videos_to_tfrecord(source_path, destination_path, n_videos_in_record, n_
 
 while `n_videos` being the number of videos in one single tfrecord file, `n_frames` being the number of frames to be stored per video and `source_dir` containing your .avi video files.
 
-# Reading from the tfrecord
+# Reading from tfrecord
 see ```test.py``` for an example
-
 
 
 ## Manual installation 
@@ -39,7 +38,7 @@ The package has been successfully tested with:
 - numpy 1.14.0
 
 ## OpenCV troubleshooting
-Typically, the required OpenCV dependency will be installed during the pip installation and everything should work fine. However, if you encounter issues with OpenCV (e.g. because you use a different version), you can build OpenCV locally from the repository [1] (e.g. refer to StackOverflow thread under [2]). Make sure to use the specified version as in different versions there might be changes to functions within the OpenCV framework.
+If you encounter issues with OpenCV (e.g. because you use a different version), you can build OpenCV locally from the repository [1] (e.g. refer to StackOverflow thread under [2]). Make sure to use the specified version as in different versions there might be changes to functions within the OpenCV framework.
 
 
 # Parameters and storage details

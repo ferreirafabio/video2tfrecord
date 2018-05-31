@@ -61,6 +61,7 @@ The videos are stored as features in the tfrecords. Every video instance contain
 
 # Future work:
 - improve documentation
+- ~~use all video frames for tfrecord~~ (use n_frames_per_video="all")
 - ~~write small exemplary script for loading the tfrecords + meta-data into a TF QueueRunner~~ (see ```test.py```)
 - replace Farneback optical flow with a more sophisticated method, say dense trajectories
 

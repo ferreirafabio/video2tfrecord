@@ -22,7 +22,7 @@ After installing the package, you can execute the following exemplary command to
 convert_videos_to_tfrecord(source_path, destination_path, n_videos_in_record, n_frames_per_video, "*.avi") 
 ```
 
-while `n_videos` being the number of videos in one single tfrecord file, `n_frames` being the number of frames to be stored per video and `source_dir` containing your .avi video files.
+while `n_videos` being the number of videos in one single tfrecord file, `n_frames` being the number of frames to be stored per video and `source_dir` containing your .avi video files. Set n_frames="all" if you want to all video frames to be stored in the tfrecord file (keep in mind that tfrecord can get very large).
 
 # Reading from tfrecord
 see ```test.py``` for an example
@@ -61,6 +61,7 @@ The videos are stored as features in the tfrecords. Every video instance contain
 
 # Future work:
 - improve documentation
+- ~~use all video frames for tfrecord~~ (use n_frames_per_video="all")
 - ~~write small exemplary script for loading the tfrecords + meta-data into a TF QueueRunner~~ (see ```test.py```)
 - replace Farneback optical flow with a more sophisticated method, say dense trajectories
 

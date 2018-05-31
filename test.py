@@ -54,7 +54,7 @@ def read_and_decode(filename_queue, n_frames):
   image_seq = []
 
   if n_frames == 'all':
-    n_frames = 354  # 354 frames in the test video
+    n_frames = 100  # travis kills due to too large tfrecord
 
   for image_count in range(n_frames):
     path = 'blob' + '/' + str(image_count)
@@ -89,7 +89,7 @@ def get_number_of_records(filenames, n_frames):
   num_examples = 0
 
   if n_frames == 'all':
-    n_frames_in_test_video = 354
+    n_frames_in_test_video = 100
   else:
     n_frames_in_test_video = n_frames
 

@@ -2,9 +2,9 @@
 [![Build Status](https://travis-ci.org/ferreirafabio/video2tfrecord.svg?branch=master)](https://travis-ci.org/ferreirafabio/video2tfrecord)
 
 # Description
-Easily convert RGB video data (e.g. tested with .avi and .mp4) to the TensorFlow tfrecords file format for training e.g. a NN in TensorFlow. Due to common hardware/GPU RAM limitations in Deep Learning, this implementation allows to limit the number of frames per video to be stored in the tfrecords. The code automatically chooses the frame step size s.t. there is an equal separation distribution of the individual video frames. 
+Easily convert RGB video data (e.g. tested with .avi and .mp4) to the TensorFlow tfrecords file format for training e.g. a NN in TensorFlow. Due to common hardware/GPU RAM limitations in Deep Learning, this implementation allows to limit the number of frames per video to be stored in the tfrecords or to simply use all video frames. The code automatically chooses the frame step size s.t. there is an equal separation distribution of the individual video frames.
 
-The implementation offers the option to include Optical Flow (currently OpenCV's calcOpticalFlowFarneback) as an additional channel to the tfrecords data. Furthermore, it can be easily extended in this regard, for example, by exchanging the currently used Optical Flow algorithm with a different one. Acompanying the code, I've also added a small example with two .mp4 files from which two tfrecords batches are created (1 video per tfrecords file). Please make sure to use the GitHub repo instead of the pip installation to access the examples.
+The implementation offers the option to include Optical Flow (currently OpenCV's calcOpticalFlowFarneback) as an additional channel to the tfrecords data (it can be easily extended in this regard, for example, by exchanging the currently used Optical Flow algorithm with a different one). Acompanying the code, we've also added a small example with two .mp4 files from which two tfrecords batches are created (1 video per tfrecords file). To access the examples, make sure to use the GitHub repo instead of the pip package.
 
 This implementation was created during a research project and grew historically. Therefore, we invite users encountering bugs to pull-request fixes.
 
@@ -22,7 +22,7 @@ After installing the package, you can execute the following exemplary command to
 convert_videos_to_tfrecord(source_path, destination_path, n_videos_in_record, n_frames_per_video, "*.avi") 
 ```
 
-while `n_videos` being the number of videos in one single tfrecord file, `n_frames` being the number of frames to be stored per video and `source_dir` containing your .avi video files. Set n_frames="all" if you want to all video frames to be stored in the tfrecord file (keep in mind that tfrecord can get very large).
+while `n_videos_in_record` being the number of videos in one single tfrecord file, `n_frames_per_video` being the number of frames to be stored per video and `source_path` containing your .avi video files. Set `n_frames_per_video="all"` if you want all video frames to be stored in the tfrecord file (keep in mind that tfrecord can become very large).
 
 # Reading from tfrecord
 see ```test.py``` for an example

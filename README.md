@@ -19,6 +19,7 @@ pip install video2tfrecord
 After installing the package, you execute the following exemplary command to start the video-to-tfrecord conversion:
 ```
 from video2tfrecord import convert_videos_to_tfrecord
+
 convert_videos_to_tfrecord(source_path, destination_path, n_videos_in_record, n_frames_per_video, "*.avi") 
 ```
 

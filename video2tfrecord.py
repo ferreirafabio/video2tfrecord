@@ -108,9 +108,13 @@ def compute_dense_optical_flow(prev_image, current_image):
 def convert_videos_to_tfrecord(source_path, destination_path,
                                n_videos_in_record=10, n_frames_per_video='all',
                                file_suffix="*.mp4", dense_optical_flow=True,
-                               n_channels=4, width=1280, height=720,
+                               width=1280, height=720,
                                color_depth="uint8", video_filenames=None):
-  """calls sub-functions convert_video_to_numpy and save_numpy_to_tfrecords in order to directly export tfrecords files
+  """Starts the process of converting video files to tfrecord files. If
+  dense_optical_flow is set to True, the number of video channels in the
+  tfrecords will automatically 4, i.e. the pipeline assumes 3 (RGB) channels
+  in the videos. This pipeline does not (yet) support a different number of
+  channels.
 
   Args:
     source_path: directory where video videos are stored
@@ -126,8 +130,6 @@ def convert_videos_to_tfrecord(source_path, destination_path,
     file_suffix: defines the video file type, e.g. *.mp4
       dense_optical_flow: boolean flag that controls if optical flow should be
       used and added to tfrecords
-
-    n_channels: specifies the number of channels the videos have
 
     width: the width of the videos in pixels
 
@@ -145,9 +147,10 @@ def convert_videos_to_tfrecord(source_path, destination_path,
   if type(n_frames_per_video) is str:
     assert n_frames_per_video == "all"
 
-  assert (n_channels == 3 and (not dense_optical_flow)) or (
-    n_channels == 4 and dense_optical_flow), "either 3 channels and no optical flow" \
-                                             " or 4 channels and optical flow currently supported"
+  if dense_optical_flow:
+    n_channels = 4
+  else:
+    n_channels = 3
 
   if video_filenames is not None:
     filenames = video_filenames
@@ -384,19 +387,3 @@ def convert_video_to_numpy(filenames, n_frames_per_video, width, height,
 
   return np.array(data)
 
-
-def main(argv):
-  convert_videos_to_tfrecord(source_path=FLAGS.source,
-                             destination_path=FLAGS.destination,
-                             n_videos_in_record=FLAGS.n_videos_in_record,
-                             n_frames_per_video=FLAGS.n_frames_per_video,
-                             file_suffix=FLAGS.file_suffix,
-                             dense_optical_flow=FLAGS.optical_flow,
-                             n_channels=FLAGS.n_channels,
-                             width=FLAGS.width_video, height=FLAGS.height_video,
-                             color_depth=FLAGS.image_color_depth,
-                             video_filenames=FLAGS.video_filenames)
-
-
-if __name__ == '__main__':
-  app.run()

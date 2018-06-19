@@ -7,7 +7,7 @@ from tensorflow.python.platform import gfile
 
 height = 720
 width = 1280
-num_depth = 3
+num_depth = 4
 in_path = "./example/input"
 out_path = "./example/output"
 n_videos_per_record = 1
@@ -19,7 +19,7 @@ class Testvideo2tfrecord(unittest.TestCase):
     convert_videos_to_tfrecord(source_path=in_path, destination_path=out_path,
                                n_videos_in_record=n_videos_per_record,
                                n_frames_per_video=n_frames,
-                               n_channels=num_depth, dense_optical_flow=False,
+                               dense_optical_flow=True,
                                file_suffix="*.mp4")
 
     filenames = gfile.Glob(os.path.join(out_path, "*.tfrecords"))

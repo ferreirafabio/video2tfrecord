@@ -63,7 +63,7 @@ def read_and_decode(filename_queue, n_frames):
     feature_dict = {path: tf.FixedLenFeature([], tf.string),
       'height': tf.FixedLenFeature([], tf.int64),
       'width': tf.FixedLenFeature([], tf.int64),
-      'depth': tf.FixedLenFeature([], tf.int64), }
+      'depth': tf.FixedLenFeature([], tf.int64)}
 
     features = tf.parse_single_example(serialized_example,
                                        features=feature_dict)

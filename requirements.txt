@@ -45,7 +45,7 @@ moviepy==0.2.3.2
 nbconvert==5.3.1
 nbformat==4.4.0
 nltk==3.2.5
-notebook==5.3.1
+notebook==5.4.1
 numpy==1.14.0
 oauthlib==2.0.6
 olefile==0.45.1
@@ -65,7 +65,6 @@ protobuf==3.5.1
 psycopg2==2.7.3.2
 ptyprocess==0.5.2
 pycparser==2.18
-pycrypto==2.6.1
 pycurl==7.43.0.1
 pydub==0.20.0
 pygame==1.9.3
@@ -96,7 +95,6 @@ testpath==0.3.1
 tornado==4.5.3
 tqdm==4.19.5
 traitlets==4.3.2
-twentybn-dl==179.41
 urllib2-file==0.2.1
 urllib2-prior-auth==0.2.0
 urllib3==1.22

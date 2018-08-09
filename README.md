@@ -61,7 +61,7 @@ The videos are stored as features in the tfrecords. Every video instance contain
 - feature['depth'] (while depth being the image depth, e.g. 4 if optical flow used)
 
 # Future work:
-- supervised learning: allow to include a label file (e.g. .csv) that specifies the relationship \<videoid> to `<label>` in each row and store label information in the records
+- supervised learning: allow to include a label file (e.g. .csv) that specifies the relationship \<videoid> to \<label> in each row and store label information in the records
 - improve documentation
 - ~~add the option to use all video frames instead of just a subset~~ (use n_frames_per_video="all")
 - ~~write small exemplary script for loading the tfrecords + meta-data into a TF QueueRunner~~ (see ```test.py```)

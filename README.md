@@ -62,7 +62,7 @@ The videos are stored as features in the tfrecords. Every video instance contain
 
 # Future work:
 - supervised learning: allow to include a label file (e.g. .csv) that specifies the relationship \<videoid> to \<label> in each row and store label information in the records
-- use compression mode in TFRecordWriter (`options = tf.python_io.TFRecordOptions(tf.python_io.TFRecordCompressionType.GZIP))
+- use compression mode in TFRecordWriter (`options = tf.python_io.TFRecordOptions(tf.python_io.TFRecordCompressionType.GZIP)`)
 - improve documentation
 - ~~add the option to use all video frames instead of just a subset~~ (use n_frames_per_video="all")
 - ~~write small exemplary script for loading the tfrecords + meta-data into a TF QueueRunner~~ (see ```test.py```)

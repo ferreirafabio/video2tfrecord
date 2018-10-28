@@ -67,7 +67,7 @@ The videos are stored as features in the tfrecords. Every video instance contain
 - ~~add the option to use all video frames instead of just a subset~~ (use n_frames_per_video="all")
 - ~~write small exemplary script for loading the tfrecords + meta-data into a TF QueueRunner~~ (see ```test.py```)
 - replace Farneback optical flow with a more sophisticated method, say dense trajectories
-- Questions to users: would it make sense to offer video2tfrecord as a web service (i.e. upload videos, get tfrecords back)?
+- Question to users: would it make sense to offer video2tfrecord as a web service (i.e. upload videos, get tfrecords back)?
 
 Additional contributors: Jonas Rothfuss (https://github.com/jonasrothfuss/)
 

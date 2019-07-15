@@ -96,7 +96,7 @@ tqdm==4.19.5
 traitlets==4.3.2
 urllib2-file==0.2.1
 urllib2-prior-auth==0.2.0
-urllib3==1.22
+urllib3==1.24.2
 urllib5==5.0.0
 video2tfrecord==0.2
 virtualenv==15.1.0

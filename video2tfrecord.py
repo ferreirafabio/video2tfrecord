@@ -288,17 +288,19 @@ def video_file_to_ndarray(i, file_path, n_frames_per_video, height, width,
       if math.floor(f % steps) == 0 or take_all_frames:
         frame = get_next_frame(cap)
         # unfortunately opencv uses bgr color format as default
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        if frame is not None:
+          frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         # special case handling: opencv's frame count sometimes differs from real frame count -> repeat
         if frame is None and frames_counter < n_frames:
-          stop, cap, steps, prev_frame_none, frames_counter = repeat_image_retrieval(
-            cap, file_path, take_all_frames, steps, frame, prev_frame_none,
-            frames_counter)
+          stop, _, _1, _2, _3, _4 = repeat_image_retrieval(
+              cap, file_path, video, take_all_frames, steps, frame, prev_frame_none,
+              frames_counter)
           if stop:
             restart = False
             break
           else:
-            video.fill(0)
+            video[frames_counter, :, :, :].fill(0)
+            frames_counter += 1
 
         else:
           if frames_counter >= n_frames:

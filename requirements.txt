@@ -67,7 +67,7 @@ pycparser==2.18
 pycurl==7.43.0.1
 pydub==0.20.0
 pygame==1.9.3
-Pygments==2.2.0
+Pygments==2.7.4
 pymongo==3.6.0
 pyparsing==2.2.0
 python-dateutil==2.6.1

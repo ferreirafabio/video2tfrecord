@@ -11,7 +11,7 @@ dj-static==0.0.6
 django-analytical==2.4.0
 django-appconf==1.0.2
 django-db-logger==0.1.6
-djangorestframework==3.9.1
+djangorestframework==3.11.2
 docopt==0.6.2
 ElementTreeFactory==1.0
 entrypoints==0.2.3

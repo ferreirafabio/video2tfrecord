@@ -48,7 +48,7 @@ notebook==6.1.5
 numpy==1.14.0
 oauthlib==2.0.6
 olefile==0.45.1
-opencv-python==3.4.0.12
+opencv-python==3.4.7.28
 packaging==16.8
 pafy==0.5.3.1
 pandas==0.22.0

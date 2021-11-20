@@ -162,8 +162,11 @@ def convert_videos_to_tfrecord(source_path, destination_path,
   print('Total videos found: ' + str(len(filenames)))
 
   filenames_split = list(get_chunks(filenames, n_videos_in_record))
+  data = None
 
   for i, batch in enumerate(filenames_split):
+    if data is not None:
+      data = None
     data = convert_video_to_numpy(filenames=batch, width=width, height=height,
                                   n_frames_per_video=n_frames_per_video,
                                   n_channels=n_channels,

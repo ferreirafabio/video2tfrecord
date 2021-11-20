@@ -181,7 +181,7 @@ def convert_videos_to_tfrecord(source_path, destination_path,
 
 def save_numpy_to_tfrecords(data, destination_path, name, fragmentSize,
                             current_batch_number, total_batch_number,
-                            color_depth):
+                            color_depth, jpeg_encode=True):
   """Converts an entire dataset into x tfrecords where x=videos/fragmentSize.
 
   Args:
@@ -192,6 +192,7 @@ def save_numpy_to_tfrecords(data, destination_path, name, fragmentSize,
     fragmentSize: specifies how many videos are stored in one tfrecords file
     current_batch_number: indicates the current batch index (function call within loop)
     total_batch_number: indicates the total number of batches
+    jpeg_encode: specify how to encode the video frames
   """
 
   num_videos = data.shape[0]
@@ -212,13 +213,19 @@ def save_numpy_to_tfrecords(data, destination_path, name, fragmentSize,
                               name + str(current_batch_number) + '_of_' + str(
                                 total_batch_number) + '.tfrecords')
       print('Writing', filename)
-      writer = tf.python_io.TFRecordWriter(filename)
+      if tf.__version__.split('.')[0] == '2':
+        writer = tf.io.TFRecordWriter(filename)
+      else:
+        writer = tf.python_io.TFRecordWriter(filename)
 
     for image_count in range(num_images):
       path = 'blob' + '/' + str(image_count)
       image = data[video_count, image_count, :, :, :]
       image = image.astype(color_depth)
-      image_raw = image.tostring()
+      if jpeg_encode:
+        image_raw = tf.image.encode_jpeg(image).numpy()
+      else:
+        image_raw = image.tostring()
 
       feature[path] = _bytes_feature(image_raw)
       feature['height'] = _int64_feature(height)

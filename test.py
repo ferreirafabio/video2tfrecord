@@ -46,7 +46,7 @@ class Testvideo2tfrecord(unittest.TestCase):
   #                    get_number_of_records(filenames, n_frames))
 
 
-def read_and_decode(filename_queue, n_frames):
+def read_and_decode(filename_queue, n_frames, jpeg_encode):
   """Creates one image sequence"""
 
   reader = tf.TFRecordReader()
@@ -69,7 +69,10 @@ def read_and_decode(filename_queue, n_frames):
                                        features=feature_dict)
 
     image_buffer = tf.reshape(features[path], shape=[])
-    image = tf.decode_raw(image_buffer, tf.uint8)
+    if jpeg_encode:
+      image = tf.image.decode_jpeg(image_buffer, channels=3)
+    else:
+      image = tf.decode_raw(image_buffer, tf.uint8)
     image = tf.reshape(image, tf.stack([height, width, num_depth]))
     image = tf.reshape(image, [1, height, width, num_depth])
     image_seq.append(image)
@@ -79,7 +82,7 @@ def read_and_decode(filename_queue, n_frames):
   return image_seq
 
 
-def get_number_of_records(filenames, n_frames):
+def get_number_of_records(filenames, n_frames, jpeg_encode=True):
   """
   this function determines the number of videos available in all tfrecord files. It also checks on the correct shape of the single examples in the tfrecord
   files.
@@ -97,7 +100,7 @@ def get_number_of_records(filenames, n_frames):
   # create new session to determine batch_size for validation/test data
   with tf.Session() as sess_valid:
     filename_queue_val = tf.train.string_input_producer(filenames, num_epochs=1)
-    image_seq_tensor_val = read_and_decode(filename_queue_val, n_frames)
+    image_seq_tensor_val = read_and_decode(filename_queue_val, n_frames, jpeg_encode)
 
     init_op = tf.group(tf.global_variables_initializer(),
                        tf.local_variables_initializer())

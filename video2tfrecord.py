@@ -144,6 +144,7 @@ def convert_videos_to_tfrecord(source_path, destination_path,
   """
   assert isinstance(n_frames_per_video, (int, str))
 
+  jpeg_encode = True if not dense_optical_flow else False
   if type(n_frames_per_video) is str:
     assert n_frames_per_video == "all"
 
@@ -179,7 +180,7 @@ def convert_videos_to_tfrecord(source_path, destination_path,
     assert data.size != 0, 'something went wrong during video to numpy conversion'
     save_numpy_to_tfrecords(data, destination_path, 'batch_',
                             n_videos_in_record, i + 1, total_batch_number,
-                            color_depth=color_depth)
+                            color_depth=color_depth, jpeg_encode=jpeg_encode)
 
 
 def save_numpy_to_tfrecords(data, destination_path, name, fragmentSize,
@@ -188,7 +189,7 @@ def save_numpy_to_tfrecords(data, destination_path, name, fragmentSize,
   """Converts an entire dataset into x tfrecords where x=videos/fragmentSize.
 
   Args:
-    data: ndarray(uint32) of shape (v,i,h,w,c) with v=number of videos,
+    data: ndarray(uint8) of shape (v,i,h,w,c) with v=number of videos,
     i=number of images, c=number of image channels, h=image height, w=image
     width
     name: filename; data samples type (train|valid|test)
@@ -273,12 +274,12 @@ def video_file_to_ndarray(i, file_path, n_frames_per_video, height, width,
   # if not all frames are to be used, we have to skip some -> set step size accordingly
   if n_frames_per_video == 'all':
     take_all_frames = True
-    video = np.zeros((frame_count, height, width, n_channels), dtype=np.uint32)
+    video = np.zeros((frame_count, height, width, n_channels), dtype=np.uint8)
     steps = frame_count
     n_frames = frame_count
   else:
     video = np.zeros((n_frames_per_video, height, width, n_channels),
-                     dtype=np.uint32)
+                     dtype=np.uint8)
     steps = int(math.floor(frame_count / n_frames_per_video))
     n_frames = n_frames_per_video
 
@@ -367,9 +368,9 @@ def convert_video_to_numpy(filenames, n_frames_per_video, width, height,
     type: processing type for video data
 
   Returns:
-    if no optical flow is used: ndarray(uint32) of shape (v,i,h,w,c) with
+    if no optical flow is used: ndarray(uint8) of shape (v,i,h,w,c) with
     v=number of videos, i=number of images, (h,w)=height and width of image,
-    c=channel, if optical flow is used: ndarray(uint32) of (v,i,h,w,
+    c=channel, if optical flow is used: ndarray(uint8) of (v,i,h,w,
     c+1)
   """
 

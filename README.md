@@ -1,4 +1,4 @@
-[![Downloads](http://pepy.tech/badge/video2tfrecord)](http://pepy.tech/count/video2tfrecord)
+[![Downloads](http://pepy.tech/badge/video2tfrecord)](http://pepy.tech/project/video2tfrecord)
 
 # Description
 Easily convert RGB video data (e.g. tested with .avi and .mp4) to the TensorFlow tfrecords file format for training e.g. a NN in TensorFlow. Due to common hardware/GPU RAM limitations in Deep Learning, this implementation allows to limit the number of frames per video to be stored in the tfrecords or to simply use all video frames. The code automatically chooses the frame step size s.t. there is an equal separation distribution of the individual video frames.
